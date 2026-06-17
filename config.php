@@ -134,3 +134,28 @@ function time_ago($datetime) {
     
     return date('M d, Y', $time);
 }
+
+/**
+ * Safely highlights matching search query text in HTML-escaped content
+ */
+function highlight_search($text, $search) {
+    $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    if ($search === '') {
+        return $escaped;
+    }
+    
+    $escaped_search = preg_quote($search, '/');
+    // Using preg_replace with case-insensitive modifier
+    return preg_replace('/(' . $escaped_search . ')/i', '<mark class="search-highlight">$1</mark>', $escaped);
+}
+
+/**
+ * Calculates reading time in minutes based on average reading speed
+ */
+function calculate_read_time($content) {
+    $word_count = str_word_count(strip_tags($content));
+    $words_per_minute = 200;
+    $minutes = ceil($word_count / $words_per_minute);
+    return (int)max(1, $minutes);
+}
+
